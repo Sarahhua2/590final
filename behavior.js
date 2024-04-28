@@ -129,6 +129,78 @@ document.getElementById("reset_ss").addEventListener("click", function (e) {
 // Add your coding solution
 // ----------------------------------------------
 
+// ----------------------------------------------
+// configure web-gl context
+// ----------------------------------------------
+function configure() {
+		canvas = document.getElementById( "webgl-canvas" );
+    
+    webgl_context = canvas.getContext( "webgl" );
+    program = initShaders( webgl_context, "vertex-shader", "fragment-shader" );
+    webgl_context.useProgram( program );
+    
+    webgl_context.viewport( 0, 0, canvas.width, canvas.height );
+       
+    attr_vertex = webgl_context.getAttribLocation( program, "vertex" );
+    attr_normal = webgl_context.getAttribLocation( program, "normal" );
+    uniform_color = webgl_context.getUniformLocation( program, "color" );
+    uniform_view = webgl_context.getUniformLocation( program, "V" );
+    uniform_perspective = webgl_context.getUniformLocation( program, "P" );
+    uniform_light = webgl_context.getUniformLocation(program, "light");
+    
+    //create additional eye variable
+    uniform_eye = webgl_context.getUniformLocation(program, "eye");
+    
+    
+
+}
+
+// ----------------------------------------------
+// create mars vertex data  
+// ----------------------------------------------
+function createMarsVertexData() {}
+
+
+// ----------------------------------------------
+// create mars normal data  
+// ----------------------------------------------
+function createMarsNormalData() {}
+
+// ----------------------------------------------
+// create mars vertex data  
+// ----------------------------------------------
+function createMGSVertexData() {}
+
+
+// ----------------------------------------------
+// create mars normal data  
+// ----------------------------------------------
+function createMGSNormalData() {}
+
+
+// ----------------------------------------------
+// allocate memory and load data.
+// ----------------------------------------------
+function allocateMemory() {}
+
+// ----------------------------------------------
+// Draw mars and color
+// ----------------------------------------------
+function drawMars() {}
+
+// ----------------------------------------------
+// Draw MGS and color
+// ----------------------------------------------
+function drawMGS() {}
+
+// ----------------------------------------------
+// Run the pipeline and draw our mesh
+// ----------------------------------------------
+function draw() {
+
+    drawMars();
+    drawMGS();
+}
 
 
 
