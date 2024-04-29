@@ -287,7 +287,10 @@ function allocateMemory() {
 // ----------------------------------------------
 // Draw mars and color
 // ----------------------------------------------
-function drawMars() {}
+function drawMars() {
+		webgl_context.uniform4f( uniform_color, 0.75, 0.75, 0.75, 1.0 );
+    webgl_context.drawArrays( webgl_context.TRIANGLES, 0, mars_vertex_data.length );
+}
 
 // ----------------------------------------------
 // Draw MGS and color
@@ -299,9 +302,32 @@ function drawMGS() {}
 // ----------------------------------------------
 function draw() {
 
+
+		let eye = vec3( xt, yt, zt);
+    webgl_context.uniform4fv( uniform_eye, eye); //i dont really know if this is necesary
+    let V = lookAt( eye, at, up );
+    let P = perspective( fov, 1.0, 0.3, 3.0 );
+    
+    webgl_context.uniformMatrix4fv( uniform_view, false, flatten( V ) );
+    webgl_context.uniformMatrix4fv( uniform_perspective, false, flatten( P ) );
+    
+
+    let light = vec4( lxt, lyt, lzt, 0.0 ); 
+    
+     webgl_context.uniform4fv( uniform_light, light );
+
+
     drawMars();
     drawMGS();
 }
+
+createMarsVertexData();
+createMarsNormalData();
+createMGSVertexData();
+createMGSNormalData();
+configure();
+allocateMemory();
+draw();
 
 
 
