@@ -4,7 +4,14 @@ console.clear();
 // create variables used in your program
 // ----------------------------------------------
 
-
+let webgl_context = null;
+let attr_vertex = null;
+let attr_normal = null;
+let uniform__color = null;
+let uniform_view = null;
+let uniform_perspective = null;
+let uniform_light = null;
+let uniform_eye = null;
 
 // ----------------------------------------------
 // camera parameters
@@ -133,7 +140,7 @@ document.getElementById("reset_ss").addEventListener("click", function (e) {
 // configure web-gl context
 // ----------------------------------------------
 function configure() {
-		canvas = document.getElementById( "webgl-canvas" );
+    canvas = document.getElementById( "webgl-canvas" );
     
     webgl_context = canvas.getContext( "webgl" );
     program = initShaders( webgl_context, "vertex-shader", "fragment-shader" );
