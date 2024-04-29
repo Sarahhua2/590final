@@ -155,27 +155,88 @@ function configure() {
 
 }
 
+// variable declaration
+
+let mars_vertex_data = [];
+let mars_normal_data = [];
+let mgs_vertex_data = [];
+let mgs_normal_data = [];
+
 // ----------------------------------------------
 // create mars vertex data  
 // ----------------------------------------------
-function createMarsVertexData() {}
+function createMarsVertexData() {
+    let row = 0;
+    
+    for ( let i=0; i<F_p.length; i++ ) {
+
+        mars_vertex_data[row++] = V_p[ F_p[i][0] ];
+        mars_vertex_data[row++] = V_p[ F_p[i][1] ];
+        mars_vertex_data[row++] = V_p[ F_p[i][2] ];
+    }
+}
 
 
 // ----------------------------------------------
 // create mars normal data  
 // ----------------------------------------------
-function createMarsNormalData() {}
+function createMarsNormalData() {
+    let row = 0;
+  
+    for ( let i=0; i<mars_vertex_data.length; i+=3 ) {
+    
+        let p1 = mars_vertex_data[i];
+        let p2 = mars_vertex_data[i+1];
+        let p3 = mars_vertex_data[i+2];
+        
+        let v1 = subtract(p2, p1);
+        let v2 = subtract(p3, p1);
+        let n = normalize(cross(v1, v2));
+        
+        mars_normal_data[row++] = n;
+        mars_normal_data[row++] = n;
+        mars_normal_data[row++] = n; 
+        
+    }
+}
 
 // ----------------------------------------------
 // create mars vertex data  
 // ----------------------------------------------
-function createMGSVertexData() {}
+function createMGSVertexData() {
+    let row = 0;
+    
+    for ( let i=0; i<F_s.length; i++ ) {
+
+        mgs_vertex_data[row++] = V_s[ F_s[i][0] ];
+        mgs_vertex_data[row++] = V_s[ F_s[i][1] ];
+        mgs_vertex_data[row++] = V_s[ F_s[i][2] ];
+    }
+}
 
 
 // ----------------------------------------------
 // create mars normal data  
 // ----------------------------------------------
-function createMGSNormalData() {}
+function createMGSNormalData() {
+    let row = 0;
+  
+    for ( let i=0; i<mars_vertex_data.length; i+=3 ) {
+    
+        let p1 = mars_vertex_data[i];
+        let p2 = mars_vertex_data[i+1];
+        let p3 = mars_vertex_data[i+2];
+        
+        let v1 = subtract(p2, p1);
+        let v2 = subtract(p3, p1);
+        let n = normalize(cross(v1, v2));
+        
+        mars_normal_data[row++] = n;
+        mars_normal_data[row++] = n;
+        mars_normal_data[row++] = n; 
+        
+    }
+}
 
 
 // ----------------------------------------------
