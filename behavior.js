@@ -9,7 +9,7 @@ let mars_attr_vertex = null;
 let mars_attr_normal = null;
 let mgs_attr_vertex = null;
 let mgs_attr_normal = null;
-let uniform__color = null;
+let uniform_color = null;
 let uniform_view = null;
 let uniform_perspective = null;
 let uniform_light = null;
@@ -287,23 +287,44 @@ function allocateMemory() {
 // ----------------------------------------------
 // Draw mars and color
 // ----------------------------------------------
-function drawMars() {}
+function drawMars() {
+    webgl_context.uniform4f( uniform_color, 0.70, 0.13, 0.13, 1.0 );
+    webgl_context.drawArrays( webgl_context.TRIANGLES, 0, mars_vertex_data.length );
+}
 
 // ----------------------------------------------
 // Draw MGS and color
 // ----------------------------------------------
-function drawMGS() {}
+function drawMGS() {
+    webgl_context.uniform4f( uniform_color, 0.70, 0.13, 0.13, 1.0 );
+    webgl_context.drawArrays( webgl_context.TRIANGLES, 0, mgs_vertex_data.length );
+}
 
 // ----------------------------------------------
 // Run the pipeline and draw our mesh
 // ----------------------------------------------
 function draw() {
+    let eye = vec3( xt, yt, zt);
+    let V = lookAt( eye, at, up );
+    let P = perspective( fov, 1.0, 0.3, 3.0 );
+    
+    webgl_context.uniformMatrix4fv( uniform_view, false, flatten( V ) );
+    webgl_context.uniformMatrix4fv( uniform_perspective, false, flatten( P ) );
+
+    let light = vec4( lxt, lyt, lzt, 0.0 ); 
+    webgl_context.uniform4fv( uniform_light, light );
 
     drawMars();
     drawMGS();
 }
 
-
+createMarsVertexData();
+createMarsNormalData();
+createMGSVertexData();
+createMGSNormalData();
+configure();
+allocateMemory();
+setInterval(draw, 100);
 
 
 
