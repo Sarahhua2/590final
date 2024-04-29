@@ -5,13 +5,17 @@ console.clear();
 // ----------------------------------------------
 
 let webgl_context = null;
-let attr_vertex = null;
-let attr_normal = null;
+let mars_attr_vertex = null;
+let mars_attr_normal = null;
+let mgs_attr_vertex = null;
+let mgs_attr_normal = null;
 let uniform__color = null;
 let uniform_view = null;
 let uniform_perspective = null;
 let uniform_light = null;
 let uniform_eye = null;
+let canvas = null;
+let program = null;
 
 // ----------------------------------------------
 // camera parameters
@@ -157,7 +161,8 @@ function configure() {
     
     //create additional eye variable
     uniform_eye = webgl_context.getUniformLocation(program, "eye");
-    
+
+    webgl_context.enable( webgl_context.DEPTH_TEST ); 
     
 
 }
@@ -249,7 +254,34 @@ function createMGSNormalData() {
 // ----------------------------------------------
 // allocate memory and load data.
 // ----------------------------------------------
-function allocateMemory() {}
+function allocateMemory() {
+    
+    let mars_vertex_id = webgl_context.createBuffer();
+    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mars_vertex_id );
+    webgl_context.vertexAttribPointer( mars_attr_vertex, size, webgl_context.FLOAT, false, 0, 0 );
+    webgl_context.enableVertexAttribArray( mars_attr_vertex );
+    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mars_vertex_data), webgl_context.STATIC_DRAW);
+    
+    
+    let mars_normal_id = webgl_context.createBuffer();
+    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mars_normal_id );
+    webgl_context.vertexAttribPointer( mars_attr_normal, size, webgl_context.FLOAT, false, 0, 0 );
+	webgl_context.enableVertexAttribArray( mars_attr_normal );
+    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mars_normal_data), webgl_context.STATIC_DRAW);
+    
+    let mgs_vertex_id = webgl_context.createBuffer();
+    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mgs_vertex_id );
+    webgl_context.vertexAttribPointer( mgs_attr_vertex, size, webgl_context.FLOAT, false, 0, 0 );
+    webgl_context.enableVertexAttribArray( mgs_attr_vertex );
+    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mgs_vertex_data), webgl_context.STATIC_DRAW );
+    
+    
+    let mgs_normal_id = webgl_context.createBuffer();
+    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mgs_normal_id );
+    webgl_context.vertexAttribPointer( mgs_attr_normal, size, webgl_context.FLOAT, false, 0, 0 );
+	webgl_context.enableVertexAttribArray( mgs_attr_normal );
+    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mgs_normal_data), webgl_context.STATIC_DRAW );
+}
 
 // ----------------------------------------------
 // Draw mars and color
