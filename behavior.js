@@ -255,6 +255,7 @@ function createMGSNormalData() {
 // allocate memory and load data.
 // ----------------------------------------------
 function allocateMemory() {
+    let size = 3
     
     let mars_vertex_id = webgl_context.createBuffer();
     webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mars_vertex_id );
