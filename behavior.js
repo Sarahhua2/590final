@@ -5,18 +5,19 @@ console.clear();
 // ----------------------------------------------
 
 let webgl_context = null;
-let mars_attr_vertex = null;
-let mars_attr_normal = null;
-let mgs_attr_vertex = null;
-let mgs_attr_normal = null;
+let attr_vertex = null;
+let attr_normal = null;
 let uniform_color = null;
 let uniform_view = null;
 let uniform_perspective = null;
 let uniform_light = null;
 let uniform_eye = null;
+let uniform_props = null;
+let uniform_trans = null;
 let canvas = null;
 let program = null;
 
+let size = 3;
 // ----------------------------------------------
 // camera parameters
 // ----------------------------------------------
@@ -158,6 +159,8 @@ function configure() {
     uniform_view = webgl_context.getUniformLocation( program, "V" );
     uniform_perspective = webgl_context.getUniformLocation( program, "P" );
     uniform_light = webgl_context.getUniformLocation(program, "light");
+    uniform_props = webgl_context.getUniformLocation( program, "props" );
+    uniform_trans = webgl_context.getUniformLocation( program, "trans" );
     
     //create additional eye variable
     uniform_eye = webgl_context.getUniformLocation(program, "eye");
@@ -169,60 +172,30 @@ function configure() {
 
 // variable declaration
 
-let mars_vertex_data = [];
-let mars_normal_data = [];
-let mgs_vertex_data = [];
-let mgs_normal_data = [];
+let vertex_data = [];
+let normal_data = [];
+let end_mars = 0;
 
 // ----------------------------------------------
 // create mars vertex data  
 // ----------------------------------------------
-function createMarsVertexData() {
+function createVertexData() {
     let row = 0;
     
     for ( let i=0; i<F_p.length; i++ ) {
 
-        mars_vertex_data[row++] = V_p[ F_p[i][0] ];
-        mars_vertex_data[row++] = V_p[ F_p[i][1] ];
-        mars_vertex_data[row++] = V_p[ F_p[i][2] ];
+        vertex_data[row++] = V_p[ F_p[i][0] ];
+        vertex_data[row++] = V_p[ F_p[i][1] ];
+        vertex_data[row++] = V_p[ F_p[i][2] ];
     }
-}
-
-
-// ----------------------------------------------
-// create mars normal data  
-// ----------------------------------------------
-function createMarsNormalData() {
-    let row = 0;
-  
-    for ( let i=0; i<mars_vertex_data.length; i+=3 ) {
     
-        let p1 = mars_vertex_data[i];
-        let p2 = mars_vertex_data[i+1];
-        let p3 = mars_vertex_data[i+2];
-        
-        let v1 = subtract(p2, p1);
-        let v2 = subtract(p3, p1);
-        let n = normalize(cross(v1, v2));
-        
-        mars_normal_data[row++] = n;
-        mars_normal_data[row++] = n;
-        mars_normal_data[row++] = n; 
-        
-    }
-}
-
-// ----------------------------------------------
-// create mars vertex data  
-// ----------------------------------------------
-function createMGSVertexData() {
-    let row = 0;
+    end_mars = vertex_data.length;
     
     for ( let i=0; i<F_s.length; i++ ) {
 
-        mgs_vertex_data[row++] = V_s[ F_s[i][0] ];
-        mgs_vertex_data[row++] = V_s[ F_s[i][1] ];
-        mgs_vertex_data[row++] = V_s[ F_s[i][2] ];
+        vertex_data[row++] = V_s[ F_s[i][0] ];
+        vertex_data[row++] = V_s[ F_s[i][1] ];
+        vertex_data[row++] = V_s[ F_s[i][2] ];
     }
 }
 
@@ -230,74 +203,66 @@ function createMGSVertexData() {
 // ----------------------------------------------
 // create mars normal data  
 // ----------------------------------------------
-function createMGSNormalData() {
+function createNormalData() {
     let row = 0;
   
-    for ( let i=0; i<mars_vertex_data.length; i+=3 ) {
+    for ( let i=0; i<vertex_data.length; i+=3 ) {
     
-        let p1 = mars_vertex_data[i];
-        let p2 = mars_vertex_data[i+1];
-        let p3 = mars_vertex_data[i+2];
+        let p1 = vertex_data[i];
+        let p2 = vertex_data[i+1];
+        let p3 = vertex_data[i+2];
         
         let v1 = subtract(p2, p1);
         let v2 = subtract(p3, p1);
         let n = normalize(cross(v1, v2));
         
-        mars_normal_data[row++] = n;
-        mars_normal_data[row++] = n;
-        mars_normal_data[row++] = n; 
+        normal_data[row++] = n;
+        normal_data[row++] = n;
+        normal_data[row++] = n; 
         
     }
 }
+
 
 
 // ----------------------------------------------
 // allocate memory and load data.
 // ----------------------------------------------
-function allocateMemory() {
-    let size = 3
+
+function allocateMemory() { 
     
-    let mars_vertex_id = webgl_context.createBuffer();
-    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mars_vertex_id );
-    webgl_context.vertexAttribPointer( mars_attr_vertex, size, webgl_context.FLOAT, false, 0, 0 );
-    webgl_context.enableVertexAttribArray( mars_attr_vertex );
-    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mars_vertex_data), webgl_context.STATIC_DRAW);
-    
-    
-    let mars_normal_id = webgl_context.createBuffer();
-    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mars_normal_id );
-    webgl_context.vertexAttribPointer( mars_attr_normal, size, webgl_context.FLOAT, false, 0, 0 );
-	webgl_context.enableVertexAttribArray( mars_attr_normal );
-    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mars_normal_data), webgl_context.STATIC_DRAW);
-    
-    let mgs_vertex_id = webgl_context.createBuffer();
-    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mgs_vertex_id );
-    webgl_context.vertexAttribPointer( mgs_attr_vertex, size, webgl_context.FLOAT, false, 0, 0 );
-    webgl_context.enableVertexAttribArray( mgs_attr_vertex );
-    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mgs_vertex_data), webgl_context.STATIC_DRAW );
+    let vertex_id = webgl_context.createBuffer();
+    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, vertex_id );
+    webgl_context.vertexAttribPointer( attr_vertex, size, webgl_context.FLOAT, false, 0, 0 );
+    webgl_context.enableVertexAttribArray( attr_vertex );
+    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(vertex_data), webgl_context.STATIC_DRAW);
     
     
-    let mgs_normal_id = webgl_context.createBuffer();
-    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, mgs_normal_id );
-    webgl_context.vertexAttribPointer( mgs_attr_normal, size, webgl_context.FLOAT, false, 0, 0 );
-	webgl_context.enableVertexAttribArray( mgs_attr_normal );
-    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(mgs_normal_data), webgl_context.STATIC_DRAW );
+    let normal_id = webgl_context.createBuffer();
+    webgl_context.bindBuffer( webgl_context.ARRAY_BUFFER, normal_id );
+    webgl_context.vertexAttribPointer( attr_normal, size, webgl_context.FLOAT, false, 0, 0 );
+	webgl_context.enableVertexAttribArray( attr_normal );
+    webgl_context.bufferData( webgl_context.ARRAY_BUFFER, flatten(normal_data), webgl_context.STATIC_DRAW);
+    
+    
 }
 
 // ----------------------------------------------
 // Draw mars and color
 // ----------------------------------------------
 function drawMars() {
+		webgl_context.uniform4f(uniform_props,radians(0.0),radians(0),radians(0.0), 1.0);
     webgl_context.uniform4f( uniform_color, 0.70, 0.13, 0.13, 1.0 );
-    webgl_context.drawArrays( webgl_context.TRIANGLES, 0, mars_vertex_data.length );
+    webgl_context.drawArrays( webgl_context.TRIANGLES, 0, end_mars );
 }
 
 // ----------------------------------------------
 // Draw MGS and color
 // ----------------------------------------------
 function drawMGS() {
-    webgl_context.uniform4f( uniform_color, 0.70, 0.13, 0.13, 1.0 );
-    webgl_context.drawArrays( webgl_context.TRIANGLES, 0, mgs_vertex_data.length );
+	webgl_context.uniform4f(uniform_props,radians(0.0),radians(0),radians(0.0), 3.0);
+    webgl_context.uniform4f( uniform_color, 0.70, 0.13, 0.13, 3.0 );
+    webgl_context.drawArrays( webgl_context.TRIANGLES, end_mars, vertex_data.length );
 }
 
 // ----------------------------------------------
@@ -314,17 +279,18 @@ function draw() {
     let light = vec4( lxt, lyt, lzt, 0.0 ); 
     webgl_context.uniform4fv( uniform_light, light );
 
-    drawMars();
+    /* drawMars() */;
     drawMGS();
 }
 
-createMarsVertexData();
-createMarsNormalData();
-createMGSVertexData();
-createMGSNormalData();
+createVertexData();
+createNormalData();
+
+
 configure();
 allocateMemory();
 setInterval(draw, 100);
+
 
 
 
