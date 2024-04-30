@@ -16,6 +16,7 @@ let uniform_props = null;
 let uniform_trans = null;
 let canvas = null;
 let program = null;
+let mars_y_rot = 0;
 
 let size = 3;
 // ----------------------------------------------
@@ -251,7 +252,12 @@ function allocateMemory() {
 // Draw mars and color
 // ----------------------------------------------
 function drawMars() {
-		webgl_context.uniform4f(uniform_color, uniform_props,radians(0.0),radians(0),radians(0.0), 1.0);
+		mars_y_rot = ( mars_y_rot + 1 ) % 360 ;
+    webgl_context.uniform4f( uniform_props, 
+        radians( 0 ),  
+        radians( mars_y_rot ),  
+        radians( 0 ),
+        1 );
     webgl_context.uniform4f(uniform_color, 0.70, 0.13, 0.13, 1.0 );
     webgl_context.drawArrays( webgl_context.TRIANGLES, 0, end_mars );
 }
@@ -279,7 +285,7 @@ function draw() {
     let light = vec4( lxt, lyt, lzt, 0.0 ); 
     webgl_context.uniform4fv( uniform_light, light );
 
-    //drawMars();
+    drawMars();
     drawMGS();
 }
 
