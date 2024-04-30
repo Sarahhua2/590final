@@ -251,8 +251,8 @@ function allocateMemory() {
 // Draw mars and color
 // ----------------------------------------------
 function drawMars() {
-		webgl_context.uniform4f(uniform_props,radians(0.0),radians(0),radians(0.0), 1.0);
-    webgl_context.uniform4f( uniform_color, 0.70, 0.13, 0.13, 1.0 );
+		webgl_context.uniform4f(uniform_color, uniform_props,radians(0.0),radians(0),radians(0.0), 1.0);
+    webgl_context.uniform4f(uniform_color, 0.70, 0.13, 0.13, 1.0 );
     webgl_context.drawArrays( webgl_context.TRIANGLES, 0, end_mars );
 }
 
@@ -260,8 +260,8 @@ function drawMars() {
 // Draw MGS and color
 // ----------------------------------------------
 function drawMGS() {
-	webgl_context.uniform4f(uniform_props,radians(0.0),radians(0),radians(0.0), 3.0);
-    webgl_context.uniform4f( uniform_color, 0.70, 0.13, 0.13, 3.0 );
+	webgl_context.uniform4f(uniform_props,radians(0.0),radians(0),radians(0.0), 1.0);
+    webgl_context.uniform4f( uniform_color, 1.0, 0.84, 0.0, 1.0 );
     webgl_context.drawArrays( webgl_context.TRIANGLES, end_mars, vertex_data.length );
 }
 
@@ -279,18 +279,13 @@ function draw() {
     let light = vec4( lxt, lyt, lzt, 0.0 ); 
     webgl_context.uniform4fv( uniform_light, light );
 
-    /* drawMars() */;
+    //drawMars();
     drawMGS();
 }
 
 createVertexData();
 createNormalData();
 
-
 configure();
 allocateMemory();
 setInterval(draw, 100);
-
-
-
-
