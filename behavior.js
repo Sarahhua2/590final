@@ -274,7 +274,7 @@ function drawMGS() {
 
   webgl_context.uniform4f(uniform_props, radians(0.0), radians(mgs_y_rot), radians(0.0), 0.3);
   webgl_context.uniform4f(uniform_color, 1.0, 0.84, 0.0, 0.3);
-  webgl_context.drawArrays(webgl_context.TRIANGLES, end_mars, vertex_data.length);
+  webgl_context.drawArrays(webgl_context.TRIANGLES, end_mars, vertex_data.length - end_mars);
 
 }
 
